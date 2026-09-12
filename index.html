@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Class Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233A;
+    --ink-soft:#4A5A72;
+    --paper:#EDF1F6;
+    --paper-raised:#FFFFFF;
+    --line:#D7DEE8;
+    --gold:#E3A64F;
+    --gold-deep:#B97F2E;
+    --teal:#2F8F82;
+    --teal-deep:#20655C;
+    --crimson:#C1443C;
+    --crimson-tint:#FBEAE8;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(22,35,58,.06), 0 6px 16px rgba(22,35,58,.06);
+    font-size:16px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; transition-duration:.001ms !important;}
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding-bottom:78px;
+  }
+  h1,h2,h3,.serif{font-family:'Fraunces',Georgia,serif;}
+  button{font-family:inherit; cursor:pointer;}
+  .app{max-width:520px; margin:0 auto; min-height:100vh; position:relative; background:var(--paper);}
+
+  /* ---------- Header ---------- */
+  header.top{
+    position:sticky; top:0; z-index:30;
+    background:rgba(237,241,246,.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:14px 18px 12px;
+    display:flex; align-items:flex-end; justify-content:space-between;
+  }
+  header.top .titles h1{font-size:1.28rem; font-weight:600; margin:0; line-height:1.1;}
+  header.top .titles .sub{font-size:.78rem; color:var(--ink-soft); margin-top:2px; display:flex; gap:8px; align-items:center;}
+  .mode-badge{
+    font-size:.68rem; font-weight:600; padding:2px 8px; border-radius:20px;
+    background:var(--line); color:var(--ink-soft);
+  }
+  .mode-badge.admin{background:var(--gold); color:#3A2A0C;}
+  .gear-btn{
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--line);
+    background:var(--paper-raised); font-size:1.05rem; display:flex; align-items:center; justify-content:center;
+    transition:transform .15s ease;
+  }
+  .gear-btn:active{transform:scale(.9) rotate(25deg);}
+
+  /* ---------- Page transitions ---------- */
+  main{padding:18px 18px 30px;}
+  .page{animation:fadein .22s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+  .hidden{display:none !important;}
+
+  /* ---------- Home ---------- */
+  .welcome{margin-bottom:18px;}
+  .welcome h2{font-size:1.5rem; margin:0 0 4px; font-weight:600;}
+  .welcome p{margin:0; color:var(--ink-soft); font-size:.92rem;}
+
+  .stat-strip{
+    display:flex; background:var(--paper-raised); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden; margin-bottom:20px;
+  }
+  .stat{flex:1; text-align:center; padding:14px 4px; position:relative;}
+  .stat:not(:last-child)::after{
+    content:""; position:absolute; right:0; top:20%; bottom:20%; width:1px; background:var(--line);
+  }
+  .stat .num{font-family:'Fraunces',serif; font-size:1.5rem; font-weight:600; display:block;}
+  .stat .lbl{font-size:.68rem; color:var(--ink-soft); margin-top:2px; display:block;}
+
+  .section-label{font-size:.95rem; font-weight:600; margin:0 0 10px; color:var(--ink); display:flex; align-items:center; gap:6px;}
+
+  .preview-card{
+    background:var(--paper-raised); border-radius:var(--radius); padding:14px 16px;
+    box-shadow:var(--shadow); margin-bottom:22px; border-left:4px solid var(--gold);
+  }
+  .preview-card .t{font-weight:600; margin-bottom:3px;}
+  .preview-card .b{font-size:.86rem; color:var(--ink-soft); line-height:1.4;}
+  .preview-card .d{font-size:.72rem; color:var(--ink-soft); margin-top:6px;}
+  .empty-note{font-size:.86rem; color:var(--ink-soft); font-style:italic; padding:6px 2px 20px;}
+
+  .today-row{
+    display:flex; align-items:center; gap:12px; padding:11px 14px;
+    background:var(--paper-raised); border-radius:10px; margin-bottom:8px; box-shadow:var(--shadow);
+  }
+  .today-row .time{font-weight:600; font-size:.82rem; width:92px; flex-shrink:0; color:var(--teal-deep);}
+  .today-row .name{font-size:.9rem;}
+
+  /* ---------- Cards: notices / warnings ---------- */
+  .card{
+    background:var(--paper-raised); border-radius:12px; padding:14px 16px;
+    box-shadow:var(--shadow); margin-bottom:12px; border-left:4px solid var(--ink-soft);
+    animation:fadein .2s ease; position:relative;
+  }
+  .card.notice{border-left-color:var(--gold-deep);}
+  .card.warning{border-left-color:var(--crimson); background:linear-gradient(0deg,var(--crimson-tint),var(--crimson-tint)), var(--paper-raised);}
+  .card .t{font-weight:600; margin-bottom:4px; padding-right:56px;}
+  .card .b{font-size:.87rem; color:var(--ink-soft); line-height:1.45; white-space:pre-wrap;}
+  .card .d{font-size:.72rem; color:var(--ink-soft); margin-top:8px;}
+  .card-admin-actions{position:absolute; top:12px; right:12px; display:flex; gap:6px;}
+  .icon-btn{
+    width:28px; height:28px; border-radius:8px; border:1px solid var(--line); background:var(--paper);
+    font-size:.8rem; display:flex; align-items:center; justify-content:center; transition:transform .1s;
+  }
+  .icon-btn:active{transform:scale(.88);}
+
+  /* ---------- Subjects ---------- */
+  .subject-row{
+    display:flex; align-items:center; gap:14px; background:var(--paper-raised);
+    border-radius:12px; padding:13px 14px; margin-bottom:10px; box-shadow:var(--shadow);
+    transition:transform .1s; position:relative;
+  }
+  .subject-row:active{transform:scale(.98);}
+  .subject-row .emoji{font-size:1.6rem; width:38px; text-align:center;}
+  .subject-row .info{flex:1;}
+  .subject-row .name{font-weight:600; font-size:.98rem;}
+  .subject-row .count{font-size:.76rem; color:var(--ink-soft); margin-top:1px;}
+  .subject-row .chev{color:var(--teal-deep); font-size:1.1rem;}
+
+  .back-row{display:flex; align-items:center; gap:8px; margin-bottom:16px;}
+  .back-btn{
+    display:flex; align-items:center; gap:4px; background:none; border:none; color:var(--teal-deep);
+    font-weight:600; font-size:.9rem; padding:4px 0;
+  }
+  .subject-detail-head{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .subject-detail-head .emoji{font-size:2.1rem;}
+  .lecture-row{
+    background:var(--paper-raised); border-radius:12px; padding:13px 14px; margin-bottom:10px;
+    box-shadow:var(--shadow); display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .lecture-row .t{font-weight:500; font-size:.9rem;}
+  .pdf-btn{
+    background:var(--teal); color:#fff; border:none; border-radius:8px; padding:7px 12px;
+    font-size:.78rem; font-weight:600; text-decoration:none; white-space:nowrap; cursor:pointer;
+    font-family:inherit;
+  }
+  .pdf-btn.disabled{background:var(--line); color:var(--ink-soft); pointer-events:none;}
+  .upload-toggle{display:flex; gap:8px; margin-bottom:14px;}
+  .upload-toggle button{
+    flex:1; padding:9px; border-radius:10px; border:1px solid var(--line); background:var(--paper-raised);
+    font-size:.82rem; font-weight:600; color:var(--ink-soft);
+  }
+  .upload-toggle button.active{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .file-hint{font-size:.72rem; color:var(--ink-soft); margin-top:5px;}
+  .file-picked{font-size:.82rem; margin-top:6px; color:var(--teal-deep); font-weight:600;}
+
+  /* ---------- Schedule ---------- */
+  .day-group{margin-bottom:20px;}
+  .day-title{font-size:.95rem; font-weight:600; margin:0 0 8px; color:var(--teal-deep);}
+  .period-row{
+    display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line);
+  }
+  .period-row:last-child{border-bottom:none;}
+  .period-row .time{font-size:.8rem; font-weight:600; width:100px; flex-shrink:0; color:var(--ink-soft);}
+  .period-row .name{font-size:.92rem; flex:1;}
+  .period-row .acts{display:flex; gap:6px;}
+
+  /* ---------- Bottom nav ---------- */
+  nav.bottom{
+    position:fixed; bottom:0; left:0; right:0; z-index:40;
+    display:flex; justify-content:center;
+  }
+  .nav-inner{
+    display:flex; width:100%; max-width:520px; background:var(--ink);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  }
+  .tab-btn{
+    flex:1; background:none; border:none; color:#B9C4D6; padding:8px 2px;
+    display:flex; flex-direction:column; align-items:center; gap:3px; border-radius:12px 12px 0 0;
+    transition:transform .18s ease, background .18s ease, color .18s ease;
+    font-size:.66rem; font-weight:600;
+  }
+  .tab-btn .ic{font-size:1.25rem; line-height:1;}
+  .tab-btn.active{
+    color:#fff; background:var(--gold-deep); transform:translateY(-8px);
+  }
+  .tab-btn.active.warnings-active{background:var(--crimson);}
+  .tab-btn.active.subjects-active{background:var(--teal-deep);}
+
+  /* ---------- Bottom sheet / modal ---------- */
+  .sheet-backdrop{
+    position:fixed; inset:0; background:rgba(22,35,58,.45); z-index:50;
+    display:flex; align-items:flex-end; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .2s ease;
+  }
+  .sheet-backdrop.show{opacity:1; pointer-events:auto;}
+  .sheet{
+    width:100%; max-width:520px; background:var(--paper); border-radius:20px 20px 0 0;
+    padding:10px 20px calc(24px + env(safe-area-inset-bottom)); max-height:85vh; overflow-y:auto;
+    transform:translateY(100%); transition:transform .25s cubic-bezier(.32,.72,0,1);
+  }
+  .sheet-backdrop.show .sheet{transform:translateY(0);}
+  .sheet-handle{width:36px; height:4px; background:var(--line); border-radius:4px; margin:8px auto 14px;}
+  .sheet h3{margin:0 0 14px; font-size:1.15rem;}
+  .field{margin-bottom:12px;}
+  .field label{display:block; font-size:.78rem; font-weight:600; margin-bottom:5px; color:var(--ink-soft);}
+  .field input, .field textarea, .field select{
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+    background:var(--paper-raised); font-family:inherit; font-size:.92rem; color:var(--ink);
+  }
+  .field textarea{min-height:80px; resize:vertical;}
+  .field-row{display:flex; gap:10px;}
+  .field-row .field{flex:1;}
+  .sheet-actions{display:flex; gap:10px; margin-top:16px;}
+  .btn{
+    padding:11px 16px; border-radius:10px; border:none; font-weight:600; font-size:.9rem; flex:1;
+    transition:transform .1s;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn.primary{background:var(--ink); color:#fff;}
+  .btn.ghost{background:var(--line); color:var(--ink);}
+  .btn.danger{background:var(--crimson); color:#fff;}
+  .btn.full{width:100%;}
+
+  .admin-menu-item{
+    display:flex; align-items:center; justify-content:space-between; padding:14px 4px;
+    border-bottom:1px solid var(--line); font-size:.92rem; font-weight:500;
+  }
+  .admin-menu-item:last-child{border-bottom:none;}
+  .admin-menu-item .arrow{color:var(--ink-soft);}
+
+  /* ---------- Toast ---------- */
+  #toast{
+    position:fixed; bottom:92px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--ink); color:#fff; padding:10px 18px; border-radius:30px; font-size:.85rem;
+    box-shadow:var(--shadow); z-index:60; opacity:0; pointer-events:none; transition:all .25s ease;
+    font-weight:500; white-space:nowrap;
+  }
+  #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  ::-webkit-scrollbar{width:0; height:0;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div class="titles">
+      <h1 id="headerTitle">Class Portal</h1>
+      <div class="sub"><span id="modeBadge" class="mode-badge">Student</span><span id="todayLabel"></span></div>
+    </div>
+    <button class="gear-btn" id="gearBtn" title="Admin">⚙️</button>
+  </header>
+
+  <main id="main"></main>
+
+  <nav class="bottom">
+    <div class="nav-inner">
+      <button class="tab-btn" data-tab="home"><span class="ic">🏠</span>Home</button>
+      <button class="tab-btn" data-tab="notices"><span class="ic">📢</span>Notices</button>
+      <button class="tab-btn" data-tab="warnings"><span class="ic">⚠️</span>Warnings</button>
+      <button class="tab-btn" data-tab="subjects"><span class="ic">🎓</span>Subjects</button>
+      <button class="tab-btn" data-tab="schedule"><span class="ic">📅</span>Schedule</button>
+    </div>
+  </nav>
+
+  <div class="sheet-backdrop" id="sheetBackdrop">
+    <div class="sheet" id="sheetContent"></div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+/* ==================== CONFIG ==================== */
+const ADMIN_PASSCODE = "class2026"; // change this to your own passcode
+const CLASS_NAME = "Class Portal";
+
+/* ==================== STORAGE LAYER ==================== */
+const HAS_STORAGE = !!(window.storage && window.storage.get && window.storage.set);
+const memoryFallback = {};
+
+async function storeGet(key, fallback){
+  if(HAS_STORAGE){
+    try{
+      const res = await window.storage.get(key, true);
+      return res && res.value ? JSON.parse(res.value) : fallback;
+    }catch(e){ return fallback; }
+  }
+  return memoryFallback[key] !== undefined ? memoryFallback[key] : fallback;
+}
+async function storeSet(key, value){
+  if(HAS_STORAGE){
+    try{ await window.storage.set(key, JSON.stringify(value), true); return; }catch(e){ /* fall through */ }
+  }
+  memoryFallback[key] = value;
+}
+
+/* ==================== SEED DATA ==================== */
+const seedNotices = [
+  {id:"n1", title:"Welcome to the class portal", body:"This is a sample notice. Admin can edit or delete this, and add real ones from the gear icon.", date: todayStr()}
+];
+const seedWarnings = [
+  {id:"w1", title:"Sample warning", body:"Urgent items — cancelled classes, test dates, deadlines — show up here in red.", date: todayStr()}
+];
+const seedSubjects = [
+  {id:"s1", emoji:"📐", name:"Mathematics", lectures:[
+    {id:"l1", title:"Lecture 1 — Intro", pdfUrl:""}
+  ]},
+  {id:"s2", emoji:"🧪", name:"Chemistry", lectures:[]},
+  {id:"s3", emoji:"📖", name:"English", lectures:[]}
+];
+const seedSchedule = [
+  {id:"p1", day:"Monday", start:"08:00", end:"08:45", name:"Mathematics"},
+  {id:"p2", day:"Monday", start:"08:45", end:"09:30", name:"Chemistry"},
+  {id:"p3", day:"Wednesday", start:"09:30", end:"10:15", name:"English"}
+];
+
+/* ==================== STATE ==================== */
+let state = { notices:[], warnings:[], subjects:[], schedule:[] };
+let currentTab = "home";
+let isAdmin = false;
+let subjectDetailId = null;
+
+function todayStr(){
+  return new Date().toLocaleDateString('en-US',{ month:'short', day:'numeric', year:'numeric' });
+}
+function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4); }
+function esc(s){ return (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+async function loadState(){
+  state.notices  = await storeGet("notices", seedNotices);
+  state.warnings = await storeGet("warnings", seedWarnings);
+  state.subjects = await storeGet("subjects", seedSubjects);
+  state.schedule = await storeGet("schedule", seedSchedule);
+}
+async function persist(key){
+  await storeSet(key, state[key]);
+}
+
+/* ==================== TOAST ==================== */
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove('show'), 1800);
+}
+
+/* ==================== NAV ==================== */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    currentTab = btn.dataset.tab;
+    subjectDetailId = null;
+    render();
+  });
+});
+document.getElementById('gearBtn').addEventListener('click', openAdminSheet);
+
+function updateNavHighlight(){
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.classList.remove('active','warnings-active','subjects-active');
+    if(btn.dataset.tab === currentTab){
+      btn.classList.add('active');
+      if(currentTab === 'warnings') btn.classList.add('warnings-active');
+      if(currentTab === 'subjects') btn.classList.add('subjects-active');
+    }
+  });
+}
+
+/* ==================== HEADER ==================== */
+function updateHeader(){
+  document.getElementById('headerTitle').textContent = CLASS_NAME;
+  document.getElementById('todayLabel').textContent = "· " + new Date().toLocaleDateString('en-US',{weekday:'long'});
+  const badge = document.getElementById('modeBadge');
+  badge.textContent = isAdmin ? "Admin" : "Student";
+  badge.classList.toggle('admin', isAdmin);
+}
+
+/* ==================== RENDER ROUTER ==================== */
+function render(){
+  updateNavHighlight();
+  updateHeader();
+  const main = document.getElementById('main');
+  main.innerHTML = "";
+  const page = document.createElement('div');
+  page.className = 'page';
+  if(currentTab === 'home') page.innerHTML = renderHome();
+  else if(currentTab === 'notices') page.innerHTML = renderFeed('notices');
+  else if(currentTab === 'warnings') page.innerHTML = renderFeed('warnings');
+  else if(currentTab === 'subjects') page.innerHTML = subjectDetailId ? renderSubjectDetail() : renderSubjects();
+  else if(currentTab === 'schedule') page.innerHTML = renderSchedule();
+  main.appendChild(page);
+  bindPageEvents();
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  const lectureCount = state.subjects.reduce((sum,s)=> sum + s.lectures.length, 0);
+  const latest = state.notices[0];
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long'});
+  const todays = state.schedule.filter(p=>p.day===today).sort((a,b)=>a.start.localeCompare(b.start));
+
+  return `
+    <div class="welcome">
+      <h2>Hey, here's what's up</h2>
+      <p>A quick snapshot of everything happening in class.</p>
+    </div>
+    <div class="stat-strip">
+      <div class="stat"><span class="num">${state.subjects.length}</span><span class="lbl">Subjects</span></div>
+      <div class="stat"><span class="num">${lectureCount}</span><span class="lbl">Lectures</span></div>
+      <div class="stat"><span class="num">${state.notices.length}</span><span class="lbl">Notices</span></div>
+      <div class="stat"><span class="num">${state.warnings.length}</span><span class="lbl">Warnings</span></div>
+    </div>
+    <p class="section-label">📢 Latest announcement</p>
+    ${latest ? `
+      <div class="preview-card">
+        <div class="t">${esc(latest.title)}</div>
+        <div class="b">${esc(latest.body)}</div>
+        <div class="d">${esc(latest.date)}</div>
+      </div>` : `<p class="empty-note">No announcements yet.</p>`}
+    <p class="section-label">📅 Today — ${today}</p>
+    ${todays.length ? todays.map(p=>`
+      <div class="today-row">
+        <div class="time">${p.start} – ${p.end}</div>
+        <div class="name">${esc(p.name)}</div>
+      </div>`).join('') : `<p class="empty-note">No classes scheduled today.</p>`}
+  `;
+}
+
+/* ---------- NOTICES / WARNINGS FEED ---------- */
+function renderFeed(type){
+  const items = [...state[type]].sort((a,b)=> (b._ts||0) - (a._ts||0));
+  const label = type === 'notices' ? '📢 Notices' : '⚠️ Warnings';
+  const cardClass = type === 'notices' ? 'notice' : 'warning';
+  const emptyMsg = type === 'notices' ? "No notices yet." : "No warnings right now.";
+
+  const addBtn = isAdmin ? `<button class="btn primary full" style="margin-bottom:16px" data-action="add-${type.slice(0,-1)}">+ Add ${type === 'notices' ? 'notice' : 'warning'}</button>` : '';
+
+  if(items.length === 0){
+    return `<p class="section-label">${label}</p>${addBtn}<p class="empty-note">${emptyMsg}</p>`;
+  }
+  return `
+    <p class="section-label">${label}</p>
+    ${addBtn}
+    ${items.map(it => `
+      <div class="card ${cardClass}" data-id="${it.id}">
+        ${isAdmin ? `
+          <div class="card-admin-actions">
+            <button class="icon-btn" data-action="edit-${type.slice(0,-1)}" data-id="${it.id}">✏️</button>
+            <button class="icon-btn" data-action="delete-${type}" data-id="${it.id}">🗑</button>
+          </div>` : ''}
+        <div class="t">${esc(it.title)}</div>
+        <div class="b">${esc(it.body)}</div>
+        <div class="d">${esc(it.date)}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+/* ---------- SUBJECTS ---------- */
+function renderSubjects(){
+  const addBtn = isAdmin ? `<button class="btn primary full" style="margin-bottom:16px" data-action="add-subject">+ Add subject</button>` : '';
+  return `
+    <p class="section-label">🎓 Subjects</p>
+    ${addBtn}
+    ${state.subjects.length === 0 ? `<p class="empty-note">No subjects added yet.</p>` : state.subjects.map(s=>`
+      <div class="subject-row" data-id="${s.id}" data-action="open-subject">
+        <div class="emoji">${s.emoji||'📘'}</div>
+        <div class="info">
+          <div class="name">${esc(s.name)}</div>
+          <div class="count">${s.lectures.length} lecture${s.lectures.length===1?'':'s'}</div>
+        </div>
+        ${isAdmin ? `
+          <button class="icon-btn" data-action="edit-subject" data-id="${s.id}">✏️</button>
+          <button class="icon-btn" data-action="delete-subject" data-id="${s.id}">🗑</button>
+        ` : `<div class="chev">›</div>`}
+      </div>
+    `).join('')}
+  `;
+}
+
+function renderSubjectDetail(){
+  const s = state.subjects.find(x=>x.id === subjectDetailId);
+  if(!s){ subjectDetailId = null; return renderSubjects(); }
+  const addBtn = isAdmin ? `<button class="btn primary full" style="margin-bottom:16px" data-action="add-lecture" data-id="${s.id}">+ Add lecture</button>` : '';
+  return `
+    <div class="back-row">
+      <button class="back-btn" data-action="back-to-subjects">‹ Subjects</button>
+    </div>
+    <div class="subject-detail-head">
+      <div class="emoji">${s.emoji||'📘'}</div>
+      <h2 style="margin:0; font-size:1.3rem;">${esc(s.name)}</h2>
+    </div>
+    ${addBtn}
+    ${s.lectures.length === 0 ? `<p class="empty-note">No lectures added yet.</p>` : s.lectures.map(l=>`
+      <div class="lecture-row">
+        <div class="t">${esc(l.title)}</div>
+        <div style="display:flex; gap:6px; align-items:center;">
+          ${l.pdfKey ? `<button class="pdf-btn" data-action="view-pdf" data-id="${l.pdfKey}">📄 PDF</button>`
+            : l.pdfUrl ? `<a class="pdf-btn" href="${esc(l.pdfUrl)}" target="_blank" rel="noopener">📄 PDF</a>`
+            : `<span class="pdf-btn disabled">No PDF</span>`}
+          ${isAdmin ? `
+            <button class="icon-btn" data-action="edit-lecture" data-id="${l.id}" data-subject="${s.id}">✏️</button>
+            <button class="icon-btn" data-action="delete-lecture" data-id="${l.id}" data-subject="${s.id}">🗑</button>
+          ` : ''}
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+/* ---------- SCHEDULE ---------- */
+const DAY_ORDER = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+function renderSchedule(){
+  const addBtn = isAdmin ? `<button class="btn primary full" style="margin-bottom:16px" data-action="add-period">+ Add period</button>` : '';
+  const byDay = {};
+  state.schedule.forEach(p=>{ (byDay[p.day] = byDay[p.day]||[]).push(p); });
+  const activeDays = DAY_ORDER.filter(d => byDay[d] && byDay[d].length);
+
+  if(activeDays.length === 0){
+    return `<p class="section-label">📅 Weekly schedule</p>${addBtn}<p class="empty-note">No periods added yet.</p>`;
+  }
+
+  return `
+    <p class="section-label">📅 Weekly schedule</p>
+    ${addBtn}
+    ${activeDays.map(day => `
+      <div class="day-group">
+        <h3 class="day-title">${day}</h3>
+        ${byDay[day].sort((a,b)=>a.start.localeCompare(b.start)).map(p=>`
+          <div class="period-row">
+            <div class="time">${p.start} – ${p.end}</div>
+            <div class="name">${esc(p.name)}</div>
+            ${isAdmin ? `
+              <div class="acts">
+                <button class="icon-btn" data-action="edit-period" data-id="${p.id}">✏️</button>
+                <button class="icon-btn" data-action="delete-period" data-id="${p.id}">🗑</button>
+              </div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    `).join('')}
+  `;
+}
+
+/* ==================== EVENT BINDING ==================== */
+function bindPageEvents(){
+  document.querySelectorAll('[data-action]').forEach(el=>{
+    el.addEventListener('click', handleAction);
+  });
+}
+
+function handleAction(e){
+  const action = e.currentTarget.dataset.action;
+  const id = e.currentTarget.dataset.id;
+  const subjectId = e.currentTarget.dataset.subject;
+
+  switch(action){
+    case 'open-subject': subjectDetailId = id; render(); break;
+    case 'back-to-subjects': subjectDetailId = null; render(); break;
+
+    case 'add-notice': openItemForm('notices'); break;
+    case 'edit-notice': openItemForm('notices', id); break;
+    case 'delete-notice': confirmDelete('notices', id); break;
+
+    case 'add-warning': openItemForm('warnings'); break;
+    case 'edit-warning': openItemForm('warnings', id); break;
+    case 'delete-warning': confirmDelete('warnings', id); break;
+
+    case 'add-subject': openSubjectForm(); break;
+    case 'edit-subject': openSubjectForm(id); break;
+    case 'delete-subject': confirmDeleteSubject(id); break;
+
+    case 'add-lecture': openLectureForm(subjectDetailId); break;
+    case 'edit-lecture': openLectureForm(subjectId, id); break;
+    case 'delete-lecture': confirmDeleteLecture(subjectId, id); break;
+    case 'view-pdf': viewStoredPdf(id); break;
+
+    case 'add-period': openPeriodForm(); break;
+    case 'edit-period': openPeriodForm(id); break;
+    case 'delete-period': confirmDeletePeriod(id); break;
+  }
+}
+
+/* ==================== SHEET / MODAL ==================== */
+const backdrop = document.getElementById('sheetBackdrop');
+const sheetContent = document.getElementById('sheetContent');
+
+function openSheet(html){
+  sheetContent.innerHTML = `<div class="sheet-handle"></div>` + html;
+  backdrop.classList.add('show');
+}
+function closeSheet(){ backdrop.classList.remove('show'); }
+backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) closeSheet(); });
+
+/* ---------- Admin unlock / menu ---------- */
+function openAdminSheet(){
+  if(!isAdmin){
+    openSheet(`
+      <h3>Admin access</h3>
+      <div class="field">
+        <label>Passcode</label>
+        <input type="password" id="adminPass" placeholder="Enter passcode">
+      </div>
+      <div class="sheet-actions">
+        <button class="btn ghost" id="cancelUnlock">Cancel</button>
+        <button class="btn primary" id="doUnlock">Unlock</button>
+      </div>
+    `);
+    document.getElementById('cancelUnlock').onclick = closeSheet;
+    document.getElementById('doUnlock').onclick = ()=>{
+      const val = document.getElementById('adminPass').value;
+      if(val === ADMIN_PASSCODE){
+        isAdmin = true;
+        closeSheet();
+        toast("Admin unlocked");
+        updateHeader();
+        render();
+      }else{
+        toast("Wrong passcode");
+      }
+    };
+  } else {
+    openSheet(`
+      <h3>Admin panel</h3>
+      <div class="admin-menu-item" data-menu="notice"><span>➕ Add announcement</span><span class="arrow">›</span></div>
+      <div class="admin-menu-item" data-menu="warning"><span>➕ Add warning</span><span class="arrow">›</span></div>
+      <div class="admin-menu-item" data-menu="subject"><span>➕ Add subject</span><span class="arrow">›</span></div>
+      <div class="admin-menu-item" data-menu="period"><span>➕ Add schedule period</span><span class="arrow">›</span></div>
+      <div class="sheet-actions" style="margin-top:20px;">
+        <button class="btn ghost" id="lockBtn">Lock admin</button>
+        <button class="btn danger" id="resetBtn">Reset data</button>
+      </div>
+    `);
+    sheetContent.querySelectorAll('[data-menu]').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const type = el.dataset.menu;
+        closeSheet();
+        setTimeout(()=>{
+          if(type==='notice') openItemForm('notices');
+          if(type==='warning') openItemForm('warnings');
+          if(type==='subject') openSubjectForm();
+          if(type==='period') openPeriodForm();
+        }, 220);
+      });
+    });
+    document.getElementById('lockBtn').onclick = ()=>{
+      isAdmin = false; closeSheet(); toast("Admin locked"); updateHeader(); render();
+    };
+    document.getElementById('resetBtn').onclick = ()=>{
+      openSheet(`
+        <h3>Reset all data?</h3>
+        <p style="color:var(--ink-soft); font-size:.88rem;">This clears notices, warnings, subjects and the schedule back to the sample defaults. This can't be undone.</p>
+        <div class="sheet-actions">
+          <button class="btn ghost" id="cancelReset">Cancel</button>
+          <button class="btn danger" id="confirmReset">Reset</button>
+        </div>
+      `);
+      document.getElementById('cancelReset').onclick = openAdminSheet;
+      document.getElementById('confirmReset').onclick = async ()=>{
+        state.notices = JSON.parse(JSON.stringify(seedNotices));
+        state.warnings = JSON.parse(JSON.stringify(seedWarnings));
+        state.subjects = JSON.parse(JSON.stringify(seedSubjects));
+        state.schedule = JSON.parse(JSON.stringify(seedSchedule));
+        await Promise.all(['notices','warnings','subjects','schedule'].map(persist));
+        closeSheet(); toast("Data reset"); render();
+      };
+    };
+  }
+}
+
+/* ---------- Notice / Warning form ---------- */
+function openItemForm(type, id){
+  const editing = !!id;
+  const item = editing ? state[type].find(x=>x.id===id) : null;
+  const label = type === 'notices' ? 'announcement' : 'warning';
+  openSheet(`
+    <h3>${editing ? 'Edit' : 'Add'} ${label}</h3>
+    <div class="field">
+      <label>Title</label>
+      <input id="fTitle" value="${item ? esc(item.title) : ''}" placeholder="e.g. Test on Monday">
+    </div>
+    <div class="field">
+      <label>Details</label>
+      <textarea id="fBody" placeholder="Write the details here...">${item ? esc(item.body) : ''}</textarea>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="fCancel">Cancel</button>
+      <button class="btn primary" id="fSave">Save</button>
+    </div>
+  `);
+  document.getElementById('fCancel').onclick = closeSheet;
+  document.getElementById('fSave').onclick = async ()=>{
+    const title = document.getElementById('fTitle').value.trim();
+    const body = document.getElementById('fBody').value.trim();
+    if(!title){ toast("Add a title first"); return; }
+    if(editing){
+      item.title = title; item.body = body;
+    } else {
+      state[type].unshift({id:uid(), title, body, date: todayStr(), _ts: Date.now()});
+    }
+    await persist(type);
+    closeSheet(); toast(editing ? "Saved" : "Added"); render();
+  };
+}
+function confirmDelete(type, id){
+  openSheet(`
+    <h3>Delete this ${type === 'notices' ? 'announcement' : 'warning'}?</h3>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="cDel">Cancel</button>
+      <button class="btn danger" id="yDel">Delete</button>
+    </div>
+  `);
+  document.getElementById('cDel').onclick = closeSheet;
+  document.getElementById('yDel').onclick = async ()=>{
+    state[type] = state[type].filter(x=>x.id!==id);
+    await persist(type);
+    closeSheet(); toast("Deleted"); render();
+  };
+}
+
+/* ---------- Subject form ---------- */
+function openSubjectForm(id){
+  const editing = !!id;
+  const item = editing ? state.subjects.find(x=>x.id===id) : null;
+  openSheet(`
+    <h3>${editing ? 'Edit' : 'Add'} subject</h3>
+    <div class="field-row">
+      <div class="field" style="flex:0 0 90px;">
+        <label>Emoji</label>
+        <input id="fEmoji" value="${item ? esc(item.emoji) : '📘'}" maxlength="4">
+      </div>
+      <div class="field">
+        <label>Subject name</label>
+        <input id="fName" value="${item ? esc(item.name) : ''}" placeholder="e.g. Physics">
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="fCancel">Cancel</button>
+      <button class="btn primary" id="fSave">Save</button>
+    </div>
+  `);
+  document.getElementById('fCancel').onclick = closeSheet;
+  document.getElementById('fSave').onclick = async ()=>{
+    const name = document.getElementById('fName').value.trim();
+    const emoji = document.getElementById('fEmoji').value.trim() || '📘';
+    if(!name){ toast("Add a subject name"); return; }
+    if(editing){ item.name = name; item.emoji = emoji; }
+    else state.subjects.push({id:uid(), emoji, name, lectures:[]});
+    await persist('subjects');
+    closeSheet(); toast(editing ? "Saved" : "Added"); render();
+  };
+}
+function confirmDeleteSubject(id){
+  openSheet(`
+    <h3>Delete this subject?</h3>
+    <p style="color:var(--ink-soft); font-size:.88rem;">Its lectures will be removed too.</p>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="cDel">Cancel</button>
+      <button class="btn danger" id="yDel">Delete</button>
+    </div>
+  `);
+  document.getElementById('cDel').onclick = closeSheet;
+  document.getElementById('yDel').onclick = async ()=>{
+    state.subjects = state.subjects.filter(x=>x.id!==id);
+    await persist('subjects');
+    closeSheet(); toast("Deleted"); render();
+  };
+}
+
+/* ---------- Lecture form ---------- */
+const MAX_PDF_BYTES = 3.5 * 1024 * 1024; // ~3.5MB raw file (storage cap is 5MB per key, base64 adds ~33%)
+
+function openLectureForm(subjId, lecId){
+  const subj = state.subjects.find(x=>x.id===subjId);
+  if(!subj) return;
+  const editing = !!lecId;
+  const item = editing ? subj.lectures.find(x=>x.id===lecId) : null;
+  const startMode = item && item.pdfUrl ? 'link' : 'upload';
+
+  openSheet(`
+    <h3>${editing ? 'Edit' : 'Add'} lecture</h3>
+    <div class="field">
+      <label>Title</label>
+      <input id="fTitle" value="${item ? esc(item.title) : ''}" placeholder="e.g. Lecture 3 — Kinematics">
+    </div>
+    <div class="field">
+      <label>PDF (optional)</label>
+      <div class="upload-toggle">
+        <button type="button" id="modeUpload" class="${startMode==='upload'?'active':''}">Upload file</button>
+        <button type="button" id="modeLink" class="${startMode==='link'?'active':''}">Paste link</button>
+      </div>
+      <div id="uploadPane" class="${startMode==='upload'?'':'hidden'}">
+        <input type="file" id="fPdfFile" accept="application/pdf">
+        <div class="file-hint">Up to about 3.5MB. Larger files: use a link instead (Google Drive, etc.)</div>
+        <div class="file-picked" id="filePicked">${item && item.pdfKey ? '📄 Current file: ' + esc(item.title) + '.pdf (choose a new one to replace it)' : ''}</div>
+      </div>
+      <div id="linkPane" class="${startMode==='link'?'':'hidden'}">
+        <input id="fPdf" value="${item && item.pdfUrl ? esc(item.pdfUrl) : ''}" placeholder="https://...">
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="fCancel">Cancel</button>
+      <button class="btn primary" id="fSave">Save</button>
+    </div>
+  `);
+
+  document.getElementById('modeUpload').onclick = ()=>{
+    document.getElementById('modeUpload').classList.add('active');
+    document.getElementById('modeLink').classList.remove('active');
+    document.getElementById('uploadPane').classList.remove('hidden');
+    document.getElementById('linkPane').classList.add('hidden');
+  };
+  document.getElementById('modeLink').onclick = ()=>{
+    document.getElementById('modeLink').classList.add('active');
+    document.getElementById('modeUpload').classList.remove('active');
+    document.getElementById('linkPane').classList.remove('hidden');
+    document.getElementById('uploadPane').classList.add('hidden');
+  };
+
+  document.getElementById('fCancel').onclick = closeSheet;
+  document.getElementById('fSave').onclick = async ()=>{
+    const title = document.getElementById('fTitle').value.trim();
+    if(!title){ toast("Add a title first"); return; }
+
+    const uploadMode = document.getElementById('modeUpload').classList.contains('active');
+    const file = uploadMode ? document.getElementById('fPdfFile').files[0] : null;
+    const pdfUrl = uploadMode ? '' : document.getElementById('fPdf').value.trim();
+
+    let pdfKey = item ? item.pdfKey : undefined;
+
+    if(file){
+      if(file.type !== 'application/pdf'){ toast("Please choose a PDF file"); return; }
+      if(file.size > MAX_PDF_BYTES){ toast("That file's too big — try a link instead"); return; }
+      toast("Uploading…");
+      try{
+        const base64 = await fileToBase64(file);
+        pdfKey = "pdf:" + (item ? item.id : uid());
+        await storeSet(pdfKey, base64);
+      }catch(err){
+        toast("Upload failed, try again");
+        return;
+      }
+    }
+
+    if(editing){
+      item.title = title;
+      item.pdfUrl = pdfUrl;
+      if(file) item.pdfKey = pdfKey;
+      if(uploadMode && !file && !item.pdfKey){ /* no file chosen, none existing — leave as no-pdf */ }
+      if(!uploadMode){ delete item.pdfKey; } // switched to link mode
+    } else {
+      const newLec = {id:uid(), title, pdfUrl};
+      if(pdfKey) newLec.pdfKey = pdfKey;
+      subj.lectures.push(newLec);
+    }
+    await persist('subjects');
+    closeSheet(); toast(editing ? "Saved" : "Added"); render();
+  };
+}
+
+function fileToBase64(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result); // data:application/pdf;base64,....
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function viewStoredPdf(pdfKey){
+  const win = window.open('', '_blank');
+  if(win){ win.document.write('<title>Loading PDF…</title><body style="font-family:sans-serif;padding:24px;">Loading PDF…</body>'); }
+  const dataUrl = await storeGet(pdfKey, null);
+  if(!dataUrl){
+    if(win) win.close();
+    toast("Couldn't load that PDF");
+    return;
+  }
+  try{
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    if(win) win.location.href = blobUrl;
+    else window.open(blobUrl, '_blank');
+  }catch(err){
+    if(win) win.close();
+    toast("Couldn't open that PDF");
+  }
+}
+
+function confirmDeleteLecture(subjId, lecId){
+  openSheet(`
+    <h3>Delete this lecture?</h3>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="cDel">Cancel</button>
+      <button class="btn danger" id="yDel">Delete</button>
+    </div>
+  `);
+  document.getElementById('cDel').onclick = closeSheet;
+  document.getElementById('yDel').onclick = async ()=>{
+    const subj = state.subjects.find(x=>x.id===subjId);
+    const lec = subj.lectures.find(x=>x.id===lecId);
+    subj.lectures = subj.lectures.filter(x=>x.id!==lecId);
+    await persist('subjects');
+    if(lec && lec.pdfKey){ try{ await window.storage.delete(lec.pdfKey, true); }catch(e){} }
+    closeSheet(); toast("Deleted"); render();
+  };
+}
+
+/* ---------- Schedule period form ---------- */
+function openPeriodForm(id){
+  const editing = !!id;
+  const item = editing ? state.schedule.find(x=>x.id===id) : null;
+  openSheet(`
+    <h3>${editing ? 'Edit' : 'Add'} period</h3>
+    <div class="field">
+      <label>Day</label>
+      <select id="fDay">
+        ${DAY_ORDER.map(d=>`<option value="${d}" ${item && item.day===d ? 'selected':''}>${d}</option>`).join('')}
+      </select>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Start time</label>
+        <input type="time" id="fStart" value="${item ? item.start : '08:00'}">
+      </div>
+      <div class="field">
+        <label>End time</label>
+        <input type="time" id="fEnd" value="${item ? item.end : '08:45'}">
+      </div>
+    </div>
+    <div class="field">
+      <label>Class / subject name</label>
+      <input id="fName" value="${item ? esc(item.name) : ''}" placeholder="e.g. Physics">
+    </div>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="fCancel">Cancel</button>
+      <button class="btn primary" id="fSave">Save</button>
+    </div>
+  `);
+  document.getElementById('fCancel').onclick = closeSheet;
+  document.getElementById('fSave').onclick = async ()=>{
+    const day = document.getElementById('fDay').value;
+    const start = document.getElementById('fStart').value;
+    const end = document.getElementById('fEnd').value;
+    const name = document.getElementById('fName').value.trim();
+    if(!name || !start || !end){ toast("Fill in all fields"); return; }
+    if(editing){ item.day=day; item.start=start; item.end=end; item.name=name; }
+    else state.schedule.push({id:uid(), day, start, end, name});
+    await persist('schedule');
+    closeSheet(); toast(editing ? "Saved" : "Added"); render();
+  };
+}
+function confirmDeletePeriod(id){
+  openSheet(`
+    <h3>Delete this period?</h3>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="cDel">Cancel</button>
+      <button class="btn danger" id="yDel">Delete</button>
+    </div>
+  `);
+  document.getElementById('cDel').onclick = closeSheet;
+  document.getElementById('yDel').onclick = async ()=>{
+    state.schedule = state.schedule.filter(x=>x.id!==id);
+    await persist('schedule');
+    closeSheet(); toast("Deleted"); render();
+  };
+}
+
+/* ==================== INIT ==================== */
+(async function init(){
+  await loadState();
+  render();
+})();
+</script>
+</body>
+</html>
