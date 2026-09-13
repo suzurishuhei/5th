@@ -42,7 +42,6 @@
   button{font-family:inherit; cursor:pointer;}
   .app{max-width:520px; margin:0 auto; min-height:100vh; position:relative; background:var(--paper);}
 
-  /* Header */
   header.top{
     position:sticky; top:0; z-index:30;
     background:rgba(237,241,246,.92);
@@ -65,13 +64,11 @@
   }
   .gear-btn:active{transform:scale(.9) rotate(25deg);}
 
-  /* Pages */
   main{padding:18px 18px 30px;}
   .page{animation:fadein .22s ease;}
   @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
   .hidden{display:none !important;}
 
-  /* Home */
   .welcome{margin-bottom:18px;}
   .welcome h2{font-size:1.5rem; margin:0 0 4px; font-weight:600;}
   .welcome p{margin:0; color:var(--ink-soft); font-size:.92rem;}
@@ -105,7 +102,6 @@
   .today-row .time{font-weight:600; font-size:.82rem; width:92px; flex-shrink:0; color:var(--teal-deep);}
   .today-row .name{font-size:.9rem;}
 
-  /* Cards */
   .card{
     background:var(--paper-raised); border-radius:12px; padding:14px 16px;
     box-shadow:var(--shadow); margin-bottom:12px; border-left:4px solid var(--ink-soft);
@@ -123,7 +119,6 @@
   }
   .icon-btn:active{transform:scale(.88);}
 
-  /* Subjects */
   .subject-row{
     display:flex; align-items:center; gap:14px; background:var(--paper-raised);
     border-radius:12px; padding:13px 14px; margin-bottom:10px; box-shadow:var(--shadow);
@@ -164,7 +159,6 @@
   .file-hint{font-size:.72rem; color:var(--ink-soft); margin-top:5px;}
   .file-picked{font-size:.82rem; margin-top:6px; color:var(--teal-deep); font-weight:600;}
 
-  /* Schedule */
   .day-group{margin-bottom:20px;}
   .day-title{font-size:.95rem; font-weight:600; margin:0 0 8px; color:var(--teal-deep);}
   .period-row{
@@ -175,7 +169,6 @@
   .period-row .name{font-size:.92rem; flex:1;}
   .period-row .acts{display:flex; gap:6px;}
 
-  /* Bottom nav */
   nav.bottom{
     position:fixed; bottom:0; left:0; right:0; z-index:40;
     display:flex; justify-content:center;
@@ -197,7 +190,6 @@
   .tab-btn.active.warnings-active{background:var(--crimson);}
   .tab-btn.active.subjects-active{background:var(--teal-deep);}
 
-  /* Bottom sheet */
   .sheet-backdrop{
     position:fixed; inset:0; background:rgba(22,35,58,.45); z-index:50;
     display:flex; align-items:flex-end; justify-content:center;
@@ -249,7 +241,6 @@
   }
   @keyframes spin{to{transform:rotate(360deg);}}
 
-  /* Toast */
   #toast{
     position:fixed; bottom:92px; left:50%; transform:translateX(-50%) translateY(20px);
     background:var(--ink); color:#fff; padding:10px 18px; border-radius:30px; font-size:.85rem;
@@ -293,14 +284,14 @@
 
 <script>
 /* ================================================================
-   CONFIG — GitHub repo details (hardcoded for you)
+   CONFIG
    ================================================================ */
 const GH_USER = "suzurishuhei";
 const GH_REPO = "5th";
 const GH_BRANCH = "main";
-const DATA_PATH = "data";           // JSON files live here
-const PDF_PATH = "pdfs";            // PDFs live here
-const LS_TOKEN_KEY = "gh_token_5th"; // where the token is saved in browser
+const DATA_PATH = "data";
+const PDF_PATH = "pdfs";
+const LS_TOKEN_KEY = "gh_token_5th";
 
 /* ================================================================
    STATE
@@ -324,13 +315,8 @@ function todayStr(){
 }
 function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4); }
 function esc(s){ return String(s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
-function utf8ToB64(str){
-  // Handles unicode safely for GitHub API content encoding
-  return btoa(unescape(encodeURIComponent(str)));
-}
-function b64ToUtf8(str){
-  return decodeURIComponent(escape(atob(str.replace(/\s/g,''))));
-}
+function utf8ToB64(str){ return btoa(unescape(encodeURIComponent(str))); }
+function b64ToUtf8(str){ return decodeURIComponent(escape(atob(str.replace(/\s/g,'')))); }
 
 /* ================================================================
    TOAST
@@ -356,21 +342,36 @@ function ghHeaders(){
   };
 }
 
+/* === READ: public via raw.githubusercontent.com — works for everyone === */
 async function ghGetFile(path){
-  // Returns { content: <parsed JSON or null>, sha: <sha or null> }
-  const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`;
-  const res = await fetch(url, { headers: ghHeaders() });
-  if(res.status === 404) return { content: null, sha: null };
-  if(!res.ok) throw new Error(`GET ${path} failed (${res.status})`);
-  const j = await res.json();
-  const decoded = b64ToUtf8(j.content);
-  let parsed = null;
-  try { parsed = JSON.parse(decoded); } catch(e){ parsed = null; }
-  return { content: parsed, sha: j.sha };
+  const rawUrl = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${path}?t=${Date.now()}`;
+  try{
+    const res = await fetch(rawUrl);
+    if(res.status === 404) return { content: null, sha: null };
+    if(!res.ok) return { content: null, sha: null };
+    const text = await res.text();
+    let parsed = null;
+    try { parsed = JSON.parse(text); } catch(e){ parsed = null; }
+    // Only fetch sha when logged in as admin (needed for writes)
+    let sha = null;
+    if(ghToken && isAdmin){
+      try{
+        const meta = await fetch(
+          `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`,
+          { headers: ghHeaders() }
+        );
+        if(meta.ok){ const j = await meta.json(); sha = j.sha; }
+      }catch(e){}
+    }
+    return { content: parsed, sha };
+  }catch(e){
+    console.warn("ghGetFile failed", path, e);
+    return { content: null, sha: null };
+  }
 }
 
+/* === WRITE: requires admin token === */
 async function ghPutFile(path, contentObj, sha, message){
-  // Creates or updates a file in the repo.
   const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${path}`;
   const body = {
     message: message || `update ${path}`,
@@ -390,23 +391,7 @@ async function ghPutFile(path, contentObj, sha, message){
   return res.json();
 }
 
-async function ghDeleteFile(path, sha, message){
-  const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${path}`;
-  const res = await fetch(url, {
-    method: "DELETE",
-    headers: ghHeaders(),
-    body: JSON.stringify({
-      message: message || `delete ${path}`,
-      sha,
-      branch: GH_BRANCH
-    })
-  });
-  if(!res.ok) throw new Error(`DELETE ${path} failed (${res.status})`);
-  return res.json();
-}
-
 async function ghPutBinary(path, base64Content, sha, message){
-  // For PDFs (already base64 encoded, no "data:" prefix)
   const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${path}`;
   const body = {
     message: message || `upload ${path}`,
@@ -428,25 +413,21 @@ async function ghPutBinary(path, base64Content, sha, message){
 
 async function saveDataType(key){
   const path = `${DATA_PATH}/${key}.json`;
-  // Fetch latest sha (in case another device updated it)
   const { sha } = await ghGetFile(path);
   await ghPutFile(path, state[key], sha, `update ${key} (admin)`);
 }
 
 /* ================================================================
-   LOAD DATA FROM GITHUB
+   LOAD DATA
    ================================================================ */
 async function loadAllData(){
-  const showLoading = (msg) => {
-    document.getElementById('main').innerHTML = `
-      <div class="loading">
-        <div class="spinner"></div>
-        ${msg}
-      </div>`;
-  };
-  showLoading("Loading class data…");
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      Loading class data…
+    </div>`;
 
-  // If no token, we still try to read public data (public repos allow unauthenticated reads)
   const keys = ["notices","warnings","subjects","schedule"];
   const results = await Promise.all(keys.map(async k => {
     try{
@@ -483,9 +464,6 @@ function updateNavHighlight(){
   });
 }
 
-/* ================================================================
-   HEADER
-   ================================================================ */
 function updateHeader(){
   document.getElementById('todayLabel').textContent = "· " + new Date().toLocaleDateString('en-US',{weekday:'long'});
   const badge = document.getElementById('modeBadge');
@@ -494,7 +472,7 @@ function updateHeader(){
 }
 
 /* ================================================================
-   RENDER ROUTER
+   RENDER
    ================================================================ */
 function render(){
   updateNavHighlight();
@@ -700,7 +678,7 @@ function handleAction(e){
 }
 
 /* ================================================================
-   SHEET / MODAL
+   SHEET
    ================================================================ */
 const backdrop = document.getElementById('sheetBackdrop');
 const sheetContent = document.getElementById('sheetContent');
@@ -717,7 +695,6 @@ backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) closeSheet()
    ================================================================ */
 function openAdminSheet(){
   if(!isAdmin){
-    // Show token form (pre-filled if we have one saved)
     openSheet(`
       <h3>🔐 Admin access</h3>
       <p style="font-size:.85rem; color:var(--ink-soft); margin:0 0 14px;">
@@ -747,12 +724,10 @@ function openAdminSheet(){
       const btn = document.getElementById('doUnlock');
       btn.textContent = "Checking…";
       btn.disabled = true;
-      // Verify token by fetching user
       try{
         const r = await fetch("https://api.github.com/user", { headers: ghHeaders() });
         if(!r.ok) throw new Error("Invalid token");
         const u = await r.json();
-        // Save token and mark admin
         localStorage.setItem(LS_TOKEN_KEY, ghToken);
         isAdmin = true;
         closeSheet();
@@ -767,7 +742,6 @@ function openAdminSheet(){
       }
     };
   } else {
-    // Admin menu
     openSheet(`
       <h3>⚙️ Admin panel</h3>
       <div class="admin-menu-item" data-menu="notice"><span>➕ Add notice</span><span class="arrow">›</span></div>
@@ -940,7 +914,7 @@ function confirmDeleteSubject(id){
 /* ================================================================
    LECTURES + PDF UPLOAD
    ================================================================ */
-const MAX_PDF_BYTES = 4 * 1024 * 1024; // GitHub API comfortably handles up to ~25MB, but keeping it reasonable for phones
+const MAX_PDF_BYTES = 4 * 1024 * 1024;
 
 function openLectureForm(subjId, lecId){
   const subj = state.subjects.find(x=>x.id===subjId);
@@ -999,8 +973,6 @@ function openLectureForm(subjId, lecId){
     const pdfUrl = uploadMode ? '' : document.getElementById('fPdf').value.trim();
 
     const btn = document.getElementById('fSave');
-
-    // Set up the new/updated lecture object
     const lecId = editing ? item.id : uid();
     const newLec = editing ? { ...item } : { id: lecId, title };
     newLec.title = title;
@@ -1013,14 +985,12 @@ function openLectureForm(subjId, lecId){
     btn.textContent = "Uploading…"; btn.disabled = true;
 
     try{
-      // 1. Handle PDF upload if a file was chosen
       if(file){
         if(file.type !== 'application/pdf'){ throw new Error("Please choose a PDF file"); }
         if(file.size > MAX_PDF_BYTES){ throw new Error("That file's too big — try a link"); }
         const base64 = await fileToBase64(file);
         const safeName = (title.replace(/[^a-z0-9]+/gi,'_').toLowerCase()).slice(0,40) || 'file';
         const pdfPath = `${PDF_PATH}/${subjId}/${lecId}_${safeName}.pdf`;
-        // Check if file already exists (to get sha for overwrite)
         let existingSha = null;
         try{
           const r = await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${pdfPath}?ref=${GH_BRANCH}`, { headers: ghHeaders() });
@@ -1031,7 +1001,6 @@ function openLectureForm(subjId, lecId){
         delete newLec.pdfUrl;
       }
 
-      // 2. Save lecture list
       if(editing){
         subj.lectures = (subj.lectures||[]).map(x => x.id === lecId ? newLec : x);
       } else {
@@ -1053,7 +1022,6 @@ function fileToBase64(file){
   return new Promise((resolve, reject)=>{
     const reader = new FileReader();
     reader.onload = ()=>{
-      // strip "data:application/pdf;base64," prefix
       const s = String(reader.result);
       const comma = s.indexOf(',');
       resolve(s.slice(comma+1));
@@ -1169,7 +1137,6 @@ function confirmDeletePeriod(id){
    INIT
    ================================================================ */
 (async function init(){
-  // Mark admin automatically if a token is saved (but we won't trust it until a write succeeds)
   if(ghToken){
     try{
       const r = await fetch("https://api.github.com/user", { headers: ghHeaders() });
