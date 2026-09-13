@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Class Portal</title>
+<meta name="theme-color" content="#16233A">
+<title>Class Portal — 5th</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -41,7 +42,7 @@
   button{font-family:inherit; cursor:pointer;}
   .app{max-width:520px; margin:0 auto; min-height:100vh; position:relative; background:var(--paper);}
 
-  /* ---------- Header ---------- */
+  /* Header */
   header.top{
     position:sticky; top:0; z-index:30;
     background:rgba(237,241,246,.92);
@@ -64,13 +65,13 @@
   }
   .gear-btn:active{transform:scale(.9) rotate(25deg);}
 
-  /* ---------- Page transitions ---------- */
+  /* Pages */
   main{padding:18px 18px 30px;}
   .page{animation:fadein .22s ease;}
   @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
   .hidden{display:none !important;}
 
-  /* ---------- Home ---------- */
+  /* Home */
   .welcome{margin-bottom:18px;}
   .welcome h2{font-size:1.5rem; margin:0 0 4px; font-weight:600;}
   .welcome p{margin:0; color:var(--ink-soft); font-size:.92rem;}
@@ -93,7 +94,7 @@
     box-shadow:var(--shadow); margin-bottom:22px; border-left:4px solid var(--gold);
   }
   .preview-card .t{font-weight:600; margin-bottom:3px;}
-  .preview-card .b{font-size:.86rem; color:var(--ink-soft); line-height:1.4;}
+  .preview-card .b{font-size:.86rem; color:var(--ink-soft); line-height:1.4; white-space:pre-wrap;}
   .preview-card .d{font-size:.72rem; color:var(--ink-soft); margin-top:6px;}
   .empty-note{font-size:.86rem; color:var(--ink-soft); font-style:italic; padding:6px 2px 20px;}
 
@@ -104,7 +105,7 @@
   .today-row .time{font-weight:600; font-size:.82rem; width:92px; flex-shrink:0; color:var(--teal-deep);}
   .today-row .name{font-size:.9rem;}
 
-  /* ---------- Cards: notices / warnings ---------- */
+  /* Cards */
   .card{
     background:var(--paper-raised); border-radius:12px; padding:14px 16px;
     box-shadow:var(--shadow); margin-bottom:12px; border-left:4px solid var(--ink-soft);
@@ -122,7 +123,7 @@
   }
   .icon-btn:active{transform:scale(.88);}
 
-  /* ---------- Subjects ---------- */
+  /* Subjects */
   .subject-row{
     display:flex; align-items:center; gap:14px; background:var(--paper-raised);
     border-radius:12px; padding:13px 14px; margin-bottom:10px; box-shadow:var(--shadow);
@@ -145,8 +146,9 @@
   .lecture-row{
     background:var(--paper-raised); border-radius:12px; padding:13px 14px; margin-bottom:10px;
     box-shadow:var(--shadow); display:flex; align-items:center; justify-content:space-between; gap:10px;
+    flex-wrap:wrap;
   }
-  .lecture-row .t{font-weight:500; font-size:.9rem;}
+  .lecture-row .t{font-weight:500; font-size:.9rem; flex:1; min-width:140px;}
   .pdf-btn{
     background:var(--teal); color:#fff; border:none; border-radius:8px; padding:7px 12px;
     font-size:.78rem; font-weight:600; text-decoration:none; white-space:nowrap; cursor:pointer;
@@ -162,7 +164,7 @@
   .file-hint{font-size:.72rem; color:var(--ink-soft); margin-top:5px;}
   .file-picked{font-size:.82rem; margin-top:6px; color:var(--teal-deep); font-weight:600;}
 
-  /* ---------- Schedule ---------- */
+  /* Schedule */
   .day-group{margin-bottom:20px;}
   .day-title{font-size:.95rem; font-weight:600; margin:0 0 8px; color:var(--teal-deep);}
   .period-row{
@@ -173,7 +175,7 @@
   .period-row .name{font-size:.92rem; flex:1;}
   .period-row .acts{display:flex; gap:6px;}
 
-  /* ---------- Bottom nav ---------- */
+  /* Bottom nav */
   nav.bottom{
     position:fixed; bottom:0; left:0; right:0; z-index:40;
     display:flex; justify-content:center;
@@ -195,7 +197,7 @@
   .tab-btn.active.warnings-active{background:var(--crimson);}
   .tab-btn.active.subjects-active{background:var(--teal-deep);}
 
-  /* ---------- Bottom sheet / modal ---------- */
+  /* Bottom sheet */
   .sheet-backdrop{
     position:fixed; inset:0; background:rgba(22,35,58,.45); z-index:50;
     display:flex; align-items:flex-end; justify-content:center;
@@ -229,15 +231,25 @@
   .btn.ghost{background:var(--line); color:var(--ink);}
   .btn.danger{background:var(--crimson); color:#fff;}
   .btn.full{width:100%;}
+  .btn:disabled{opacity:.6; pointer-events:none;}
 
   .admin-menu-item{
     display:flex; align-items:center; justify-content:space-between; padding:14px 4px;
-    border-bottom:1px solid var(--line); font-size:.92rem; font-weight:500;
+    border-bottom:1px solid var(--line); font-size:.92rem; font-weight:500; cursor:pointer;
   }
   .admin-menu-item:last-child{border-bottom:none;}
   .admin-menu-item .arrow{color:var(--ink-soft);}
 
-  /* ---------- Toast ---------- */
+  .loading{
+    text-align:center; padding:40px 20px; color:var(--ink-soft); font-size:.9rem;
+  }
+  .loading .spinner{
+    width:32px; height:32px; border:3px solid var(--line); border-top-color:var(--teal);
+    border-radius:50%; margin:0 auto 14px; animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* Toast */
   #toast{
     position:fixed; bottom:92px; left:50%; transform:translateX(-50%) translateY(20px);
     background:var(--ink); color:#fff; padding:10px 18px; border-radius:30px; font-size:.85rem;
@@ -280,83 +292,177 @@
 </div>
 
 <script>
-/* ==================== CONFIG ==================== */
-const ADMIN_PASSCODE = "class2026"; // change this to your own passcode
-const CLASS_NAME = "Class Portal";
+/* ================================================================
+   CONFIG — GitHub repo details (hardcoded for you)
+   ================================================================ */
+const GH_USER = "suzurishuhei";
+const GH_REPO = "5th";
+const GH_BRANCH = "main";
+const DATA_PATH = "data";           // JSON files live here
+const PDF_PATH = "pdfs";            // PDFs live here
+const LS_TOKEN_KEY = "gh_token_5th"; // where the token is saved in browser
 
-/* ==================== STORAGE LAYER ==================== */
-const HAS_STORAGE = !!(window.storage && window.storage.get && window.storage.set);
-const memoryFallback = {};
-
-async function storeGet(key, fallback){
-  if(HAS_STORAGE){
-    try{
-      const res = await window.storage.get(key, true);
-      return res && res.value ? JSON.parse(res.value) : fallback;
-    }catch(e){ return fallback; }
-  }
-  return memoryFallback[key] !== undefined ? memoryFallback[key] : fallback;
-}
-async function storeSet(key, value){
-  if(HAS_STORAGE){
-    try{ await window.storage.set(key, JSON.stringify(value), true); return; }catch(e){ /* fall through */ }
-  }
-  memoryFallback[key] = value;
-}
-
-/* ==================== SEED DATA ==================== */
-const seedNotices = [
-  {id:"n1", title:"Welcome to the class portal", body:"This is a sample notice. Admin can edit or delete this, and add real ones from the gear icon.", date: todayStr()}
-];
-const seedWarnings = [
-  {id:"w1", title:"Sample warning", body:"Urgent items — cancelled classes, test dates, deadlines — show up here in red.", date: todayStr()}
-];
-const seedSubjects = [
-  {id:"s1", emoji:"📐", name:"Mathematics", lectures:[
-    {id:"l1", title:"Lecture 1 — Intro", pdfUrl:""}
-  ]},
-  {id:"s2", emoji:"🧪", name:"Chemistry", lectures:[]},
-  {id:"s3", emoji:"📖", name:"English", lectures:[]}
-];
-const seedSchedule = [
-  {id:"p1", day:"Monday", start:"08:00", end:"08:45", name:"Mathematics"},
-  {id:"p2", day:"Monday", start:"08:45", end:"09:30", name:"Chemistry"},
-  {id:"p3", day:"Wednesday", start:"09:30", end:"10:15", name:"English"}
-];
-
-/* ==================== STATE ==================== */
-let state = { notices:[], warnings:[], subjects:[], schedule:[] };
+/* ================================================================
+   STATE
+   ================================================================ */
+let state = {
+  notices: [],
+  warnings: [],
+  subjects: [],
+  schedule: []
+};
 let currentTab = "home";
 let isAdmin = false;
 let subjectDetailId = null;
+let ghToken = localStorage.getItem(LS_TOKEN_KEY) || "";
 
+/* ================================================================
+   HELPERS
+   ================================================================ */
 function todayStr(){
   return new Date().toLocaleDateString('en-US',{ month:'short', day:'numeric', year:'numeric' });
 }
 function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4); }
-function esc(s){ return (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
-
-async function loadState(){
-  state.notices  = await storeGet("notices", seedNotices);
-  state.warnings = await storeGet("warnings", seedWarnings);
-  state.subjects = await storeGet("subjects", seedSubjects);
-  state.schedule = await storeGet("schedule", seedSchedule);
+function esc(s){ return String(s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function utf8ToB64(str){
+  // Handles unicode safely for GitHub API content encoding
+  return btoa(unescape(encodeURIComponent(str)));
 }
-async function persist(key){
-  await storeSet(key, state[key]);
+function b64ToUtf8(str){
+  return decodeURIComponent(escape(atob(str.replace(/\s/g,''))));
 }
 
-/* ==================== TOAST ==================== */
+/* ================================================================
+   TOAST
+   ================================================================ */
 let toastTimer;
 function toast(msg){
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> el.classList.remove('show'), 1800);
+  toastTimer = setTimeout(()=> el.classList.remove('show'), 2200);
 }
 
-/* ==================== NAV ==================== */
+/* ================================================================
+   GITHUB API
+   ================================================================ */
+function ghHeaders(){
+  return {
+    "Authorization": `Bearer ${ghToken}`,
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+    "Content-Type": "application/json"
+  };
+}
+
+async function ghGetFile(path){
+  // Returns { content: <parsed JSON or null>, sha: <sha or null> }
+  const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`;
+  const res = await fetch(url, { headers: ghHeaders() });
+  if(res.status === 404) return { content: null, sha: null };
+  if(!res.ok) throw new Error(`GET ${path} failed (${res.status})`);
+  const j = await res.json();
+  const decoded = b64ToUtf8(j.content);
+  let parsed = null;
+  try { parsed = JSON.parse(decoded); } catch(e){ parsed = null; }
+  return { content: parsed, sha: j.sha };
+}
+
+async function ghPutFile(path, contentObj, sha, message){
+  // Creates or updates a file in the repo.
+  const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${path}`;
+  const body = {
+    message: message || `update ${path}`,
+    content: utf8ToB64(JSON.stringify(contentObj, null, 2)),
+    branch: GH_BRANCH
+  };
+  if(sha) body.sha = sha;
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: ghHeaders(),
+    body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    const err = await res.json().catch(()=>({}));
+    throw new Error(err.message || `PUT ${path} failed (${res.status})`);
+  }
+  return res.json();
+}
+
+async function ghDeleteFile(path, sha, message){
+  const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${path}`;
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: ghHeaders(),
+    body: JSON.stringify({
+      message: message || `delete ${path}`,
+      sha,
+      branch: GH_BRANCH
+    })
+  });
+  if(!res.ok) throw new Error(`DELETE ${path} failed (${res.status})`);
+  return res.json();
+}
+
+async function ghPutBinary(path, base64Content, sha, message){
+  // For PDFs (already base64 encoded, no "data:" prefix)
+  const url = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${path}`;
+  const body = {
+    message: message || `upload ${path}`,
+    content: base64Content,
+    branch: GH_BRANCH
+  };
+  if(sha) body.sha = sha;
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: ghHeaders(),
+    body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    const err = await res.json().catch(()=>({}));
+    throw new Error(err.message || `PUT ${path} failed (${res.status})`);
+  }
+  return res.json();
+}
+
+async function saveDataType(key){
+  const path = `${DATA_PATH}/${key}.json`;
+  // Fetch latest sha (in case another device updated it)
+  const { sha } = await ghGetFile(path);
+  await ghPutFile(path, state[key], sha, `update ${key} (admin)`);
+}
+
+/* ================================================================
+   LOAD DATA FROM GITHUB
+   ================================================================ */
+async function loadAllData(){
+  const showLoading = (msg) => {
+    document.getElementById('main').innerHTML = `
+      <div class="loading">
+        <div class="spinner"></div>
+        ${msg}
+      </div>`;
+  };
+  showLoading("Loading class data…");
+
+  // If no token, we still try to read public data (public repos allow unauthenticated reads)
+  const keys = ["notices","warnings","subjects","schedule"];
+  const results = await Promise.all(keys.map(async k => {
+    try{
+      const { content } = await ghGetFile(`${DATA_PATH}/${k}.json`);
+      return [k, content || []];
+    }catch(e){
+      console.warn("load error", k, e);
+      return [k, []];
+    }
+  }));
+  results.forEach(([k,v]) => { state[k] = v; });
+}
+
+/* ================================================================
+   NAV
+   ================================================================ */
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     currentTab = btn.dataset.tab;
@@ -377,16 +483,19 @@ function updateNavHighlight(){
   });
 }
 
-/* ==================== HEADER ==================== */
+/* ================================================================
+   HEADER
+   ================================================================ */
 function updateHeader(){
-  document.getElementById('headerTitle').textContent = CLASS_NAME;
   document.getElementById('todayLabel').textContent = "· " + new Date().toLocaleDateString('en-US',{weekday:'long'});
   const badge = document.getElementById('modeBadge');
   badge.textContent = isAdmin ? "Admin" : "Student";
   badge.classList.toggle('admin', isAdmin);
 }
 
-/* ==================== RENDER ROUTER ==================== */
+/* ================================================================
+   RENDER ROUTER
+   ================================================================ */
 function render(){
   updateNavHighlight();
   updateHeader();
@@ -403,9 +512,8 @@ function render(){
   bindPageEvents();
 }
 
-/* ---------- HOME ---------- */
 function renderHome(){
-  const lectureCount = state.subjects.reduce((sum,s)=> sum + s.lectures.length, 0);
+  const lectureCount = state.subjects.reduce((sum,s)=> sum + (s.lectures||[]).length, 0);
   const latest = state.notices[0];
   const today = new Date().toLocaleDateString('en-US',{weekday:'long'});
   const todays = state.schedule.filter(p=>p.day===today).sort((a,b)=>a.start.localeCompare(b.start));
@@ -426,25 +534,24 @@ function renderHome(){
       <div class="preview-card">
         <div class="t">${esc(latest.title)}</div>
         <div class="b">${esc(latest.body)}</div>
-        <div class="d">${esc(latest.date)}</div>
+        <div class="d">${esc(latest.date || '')}</div>
       </div>` : `<p class="empty-note">No announcements yet.</p>`}
     <p class="section-label">📅 Today — ${today}</p>
     ${todays.length ? todays.map(p=>`
       <div class="today-row">
-        <div class="time">${p.start} – ${p.end}</div>
+        <div class="time">${esc(p.start)} – ${esc(p.end)}</div>
         <div class="name">${esc(p.name)}</div>
       </div>`).join('') : `<p class="empty-note">No classes scheduled today.</p>`}
   `;
 }
 
-/* ---------- NOTICES / WARNINGS FEED ---------- */
 function renderFeed(type){
   const items = [...state[type]].sort((a,b)=> (b._ts||0) - (a._ts||0));
   const label = type === 'notices' ? '📢 Notices' : '⚠️ Warnings';
   const cardClass = type === 'notices' ? 'notice' : 'warning';
   const emptyMsg = type === 'notices' ? "No notices yet." : "No warnings right now.";
 
-  const addBtn = isAdmin ? `<button class="btn primary full" style="margin-bottom:16px" data-action="add-${type.slice(0,-1)}">+ Add ${type === 'notices' ? 'notice' : 'warning'}</button>` : '';
+  const addBtn = isAdmin ? `<button class="btn primary full" style="margin-bottom:16px" data-action="add-${type === 'notices' ? 'notice' : 'warning'}">+ Add ${type === 'notices' ? 'notice' : 'warning'}</button>` : '';
 
   if(items.length === 0){
     return `<p class="section-label">${label}</p>${addBtn}<p class="empty-note">${emptyMsg}</p>`;
@@ -456,34 +563,33 @@ function renderFeed(type){
       <div class="card ${cardClass}" data-id="${it.id}">
         ${isAdmin ? `
           <div class="card-admin-actions">
-            <button class="icon-btn" data-action="edit-${type.slice(0,-1)}" data-id="${it.id}">✏️</button>
+            <button class="icon-btn" data-action="edit-${type === 'notices' ? 'notice' : 'warning'}" data-id="${it.id}">✏️</button>
             <button class="icon-btn" data-action="delete-${type}" data-id="${it.id}">🗑</button>
           </div>` : ''}
         <div class="t">${esc(it.title)}</div>
         <div class="b">${esc(it.body)}</div>
-        <div class="d">${esc(it.date)}</div>
+        <div class="d">${esc(it.date || '')}</div>
       </div>
     `).join('')}
   `;
 }
 
-/* ---------- SUBJECTS ---------- */
 function renderSubjects(){
   const addBtn = isAdmin ? `<button class="btn primary full" style="margin-bottom:16px" data-action="add-subject">+ Add subject</button>` : '';
   return `
     <p class="section-label">🎓 Subjects</p>
     ${addBtn}
     ${state.subjects.length === 0 ? `<p class="empty-note">No subjects added yet.</p>` : state.subjects.map(s=>`
-      <div class="subject-row" data-id="${s.id}" data-action="open-subject">
-        <div class="emoji">${s.emoji||'📘'}</div>
-        <div class="info">
+      <div class="subject-row">
+        <div class="emoji" data-action="open-subject" data-id="${s.id}">${s.emoji||'📘'}</div>
+        <div class="info" data-action="open-subject" data-id="${s.id}">
           <div class="name">${esc(s.name)}</div>
-          <div class="count">${s.lectures.length} lecture${s.lectures.length===1?'':'s'}</div>
+          <div class="count">${(s.lectures||[]).length} lecture${(s.lectures||[]).length===1?'':'s'}</div>
         </div>
         ${isAdmin ? `
           <button class="icon-btn" data-action="edit-subject" data-id="${s.id}">✏️</button>
           <button class="icon-btn" data-action="delete-subject" data-id="${s.id}">🗑</button>
-        ` : `<div class="chev">›</div>`}
+        ` : `<div class="chev" data-action="open-subject" data-id="${s.id}">›</div>`}
       </div>
     `).join('')}
   `;
@@ -493,6 +599,7 @@ function renderSubjectDetail(){
   const s = state.subjects.find(x=>x.id === subjectDetailId);
   if(!s){ subjectDetailId = null; return renderSubjects(); }
   const addBtn = isAdmin ? `<button class="btn primary full" style="margin-bottom:16px" data-action="add-lecture" data-id="${s.id}">+ Add lecture</button>` : '';
+  const lecs = s.lectures || [];
   return `
     <div class="back-row">
       <button class="back-btn" data-action="back-to-subjects">‹ Subjects</button>
@@ -502,11 +609,12 @@ function renderSubjectDetail(){
       <h2 style="margin:0; font-size:1.3rem;">${esc(s.name)}</h2>
     </div>
     ${addBtn}
-    ${s.lectures.length === 0 ? `<p class="empty-note">No lectures added yet.</p>` : s.lectures.map(l=>`
+    ${lecs.length === 0 ? `<p class="empty-note">No lectures added yet.</p>` : lecs.map(l=>`
       <div class="lecture-row">
         <div class="t">${esc(l.title)}</div>
         <div style="display:flex; gap:6px; align-items:center;">
-          ${l.pdfKey ? `<button class="pdf-btn" data-action="view-pdf" data-id="${l.pdfKey}">📄 PDF</button>`
+          ${l.pdfPath ? `<a class="pdf-btn" href="https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${l.pdfPath}" target="_blank" rel="noopener">📄 View</a>
+            <a class="pdf-btn" href="https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/${GH_BRANCH}/${l.pdfPath}" download>⬇ Save</a>`
             : l.pdfUrl ? `<a class="pdf-btn" href="${esc(l.pdfUrl)}" target="_blank" rel="noopener">📄 PDF</a>`
             : `<span class="pdf-btn disabled">No PDF</span>`}
           ${isAdmin ? `
@@ -519,7 +627,6 @@ function renderSubjectDetail(){
   `;
 }
 
-/* ---------- SCHEDULE ---------- */
 const DAY_ORDER = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 function renderSchedule(){
   const addBtn = isAdmin ? `<button class="btn primary full" style="margin-bottom:16px" data-action="add-period">+ Add period</button>` : '';
@@ -530,7 +637,6 @@ function renderSchedule(){
   if(activeDays.length === 0){
     return `<p class="section-label">📅 Weekly schedule</p>${addBtn}<p class="empty-note">No periods added yet.</p>`;
   }
-
   return `
     <p class="section-label">📅 Weekly schedule</p>
     ${addBtn}
@@ -539,7 +645,7 @@ function renderSchedule(){
         <h3 class="day-title">${day}</h3>
         ${byDay[day].sort((a,b)=>a.start.localeCompare(b.start)).map(p=>`
           <div class="period-row">
-            <div class="time">${p.start} – ${p.end}</div>
+            <div class="time">${esc(p.start)} – ${esc(p.end)}</div>
             <div class="name">${esc(p.name)}</div>
             ${isAdmin ? `
               <div class="acts">
@@ -553,7 +659,9 @@ function renderSchedule(){
   `;
 }
 
-/* ==================== EVENT BINDING ==================== */
+/* ================================================================
+   EVENTS
+   ================================================================ */
 function bindPageEvents(){
   document.querySelectorAll('[data-action]').forEach(el=>{
     el.addEventListener('click', handleAction);
@@ -584,7 +692,6 @@ function handleAction(e){
     case 'add-lecture': openLectureForm(subjectDetailId); break;
     case 'edit-lecture': openLectureForm(subjectId, id); break;
     case 'delete-lecture': confirmDeleteLecture(subjectId, id); break;
-    case 'view-pdf': viewStoredPdf(id); break;
 
     case 'add-period': openPeriodForm(); break;
     case 'edit-period': openPeriodForm(id); break;
@@ -592,7 +699,9 @@ function handleAction(e){
   }
 }
 
-/* ==================== SHEET / MODAL ==================== */
+/* ================================================================
+   SHEET / MODAL
+   ================================================================ */
 const backdrop = document.getElementById('sheetBackdrop');
 const sheetContent = document.getElementById('sheetContent');
 
@@ -603,43 +712,71 @@ function openSheet(html){
 function closeSheet(){ backdrop.classList.remove('show'); }
 backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) closeSheet(); });
 
-/* ---------- Admin unlock / menu ---------- */
+/* ================================================================
+   ADMIN UNLOCK
+   ================================================================ */
 function openAdminSheet(){
   if(!isAdmin){
+    // Show token form (pre-filled if we have one saved)
     openSheet(`
-      <h3>Admin access</h3>
+      <h3>🔐 Admin access</h3>
+      <p style="font-size:.85rem; color:var(--ink-soft); margin:0 0 14px;">
+        Paste your GitHub token once. It'll be saved privately in this browser so you never have to type it again.
+      </p>
       <div class="field">
-        <label>Passcode</label>
-        <input type="password" id="adminPass" placeholder="Enter passcode">
+        <label>GitHub Token</label>
+        <input type="password" id="adminToken" value="${ghToken ? esc(ghToken) : ''}" placeholder="github_pat_...">
       </div>
       <div class="sheet-actions">
         <button class="btn ghost" id="cancelUnlock">Cancel</button>
         <button class="btn primary" id="doUnlock">Unlock</button>
       </div>
+      ${ghToken ? `<button class="btn ghost full" style="margin-top:10px" id="clearToken">Forget saved token</button>` : ''}
     `);
     document.getElementById('cancelUnlock').onclick = closeSheet;
-    document.getElementById('doUnlock').onclick = ()=>{
-      const val = document.getElementById('adminPass').value;
-      if(val === ADMIN_PASSCODE){
+    document.getElementById('clearToken') && (document.getElementById('clearToken').onclick = ()=>{
+      localStorage.removeItem(LS_TOKEN_KEY);
+      ghToken = "";
+      toast("Token forgotten");
+      openAdminSheet();
+    });
+    document.getElementById('doUnlock').onclick = async ()=>{
+      const val = document.getElementById('adminToken').value.trim();
+      if(!val){ toast("Paste your token first"); return; }
+      ghToken = val;
+      const btn = document.getElementById('doUnlock');
+      btn.textContent = "Checking…";
+      btn.disabled = true;
+      // Verify token by fetching user
+      try{
+        const r = await fetch("https://api.github.com/user", { headers: ghHeaders() });
+        if(!r.ok) throw new Error("Invalid token");
+        const u = await r.json();
+        // Save token and mark admin
+        localStorage.setItem(LS_TOKEN_KEY, ghToken);
         isAdmin = true;
         closeSheet();
-        toast("Admin unlocked");
+        toast(`Welcome, ${u.login}`);
         updateHeader();
         render();
-      }else{
-        toast("Wrong passcode");
+      }catch(err){
+        toast("Token invalid or lacks access");
+        ghToken = "";
+        btn.textContent = "Unlock";
+        btn.disabled = false;
       }
     };
   } else {
+    // Admin menu
     openSheet(`
-      <h3>Admin panel</h3>
-      <div class="admin-menu-item" data-menu="notice"><span>➕ Add announcement</span><span class="arrow">›</span></div>
+      <h3>⚙️ Admin panel</h3>
+      <div class="admin-menu-item" data-menu="notice"><span>➕ Add notice</span><span class="arrow">›</span></div>
       <div class="admin-menu-item" data-menu="warning"><span>➕ Add warning</span><span class="arrow">›</span></div>
       <div class="admin-menu-item" data-menu="subject"><span>➕ Add subject</span><span class="arrow">›</span></div>
       <div class="admin-menu-item" data-menu="period"><span>➕ Add schedule period</span><span class="arrow">›</span></div>
       <div class="sheet-actions" style="margin-top:20px;">
         <button class="btn ghost" id="lockBtn">Lock admin</button>
-        <button class="btn danger" id="resetBtn">Reset data</button>
+        <button class="btn ghost" id="reloadBtn">Reload data</button>
       </div>
     `);
     sheetContent.querySelectorAll('[data-menu]').forEach(el=>{
@@ -657,33 +794,22 @@ function openAdminSheet(){
     document.getElementById('lockBtn').onclick = ()=>{
       isAdmin = false; closeSheet(); toast("Admin locked"); updateHeader(); render();
     };
-    document.getElementById('resetBtn').onclick = ()=>{
-      openSheet(`
-        <h3>Reset all data?</h3>
-        <p style="color:var(--ink-soft); font-size:.88rem;">This clears notices, warnings, subjects and the schedule back to the sample defaults. This can't be undone.</p>
-        <div class="sheet-actions">
-          <button class="btn ghost" id="cancelReset">Cancel</button>
-          <button class="btn danger" id="confirmReset">Reset</button>
-        </div>
-      `);
-      document.getElementById('cancelReset').onclick = openAdminSheet;
-      document.getElementById('confirmReset').onclick = async ()=>{
-        state.notices = JSON.parse(JSON.stringify(seedNotices));
-        state.warnings = JSON.parse(JSON.stringify(seedWarnings));
-        state.subjects = JSON.parse(JSON.stringify(seedSubjects));
-        state.schedule = JSON.parse(JSON.stringify(seedSchedule));
-        await Promise.all(['notices','warnings','subjects','schedule'].map(persist));
-        closeSheet(); toast("Data reset"); render();
-      };
+    document.getElementById('reloadBtn').onclick = async ()=>{
+      closeSheet();
+      await loadAllData();
+      render();
+      toast("Reloaded from GitHub");
     };
   }
 }
 
-/* ---------- Notice / Warning form ---------- */
+/* ================================================================
+   NOTICES / WARNINGS
+   ================================================================ */
 function openItemForm(type, id){
   const editing = !!id;
   const item = editing ? state[type].find(x=>x.id===id) : null;
-  const label = type === 'notices' ? 'announcement' : 'warning';
+  const label = type === 'notices' ? 'notice' : 'warning';
   openSheet(`
     <h3>${editing ? 'Edit' : 'Add'} ${label}</h3>
     <div class="field">
@@ -696,7 +822,7 @@ function openItemForm(type, id){
     </div>
     <div class="sheet-actions">
       <button class="btn ghost" id="fCancel">Cancel</button>
-      <button class="btn primary" id="fSave">Save</button>
+      <button class="btn primary" id="fSave">Save & publish</button>
     </div>
   `);
   document.getElementById('fCancel').onclick = closeSheet;
@@ -704,18 +830,27 @@ function openItemForm(type, id){
     const title = document.getElementById('fTitle').value.trim();
     const body = document.getElementById('fBody').value.trim();
     if(!title){ toast("Add a title first"); return; }
-    if(editing){
-      item.title = title; item.body = body;
-    } else {
-      state[type].unshift({id:uid(), title, body, date: todayStr(), _ts: Date.now()});
+    const btn = document.getElementById('fSave');
+    btn.textContent = "Publishing…"; btn.disabled = true;
+    try{
+      if(editing){
+        item.title = title; item.body = body;
+      } else {
+        state[type].unshift({id:uid(), title, body, date: todayStr(), _ts: Date.now()});
+      }
+      await saveDataType(type);
+      closeSheet(); toast(editing ? "✅ Saved" : "✅ Published"); render();
+    }catch(err){
+      console.error(err);
+      toast("❌ Failed: " + err.message);
+      btn.textContent = "Save & publish"; btn.disabled = false;
     }
-    await persist(type);
-    closeSheet(); toast(editing ? "Saved" : "Added"); render();
   };
 }
+
 function confirmDelete(type, id){
   openSheet(`
-    <h3>Delete this ${type === 'notices' ? 'announcement' : 'warning'}?</h3>
+    <h3>Delete this ${type === 'notices' ? 'notice' : 'warning'}?</h3>
     <div class="sheet-actions">
       <button class="btn ghost" id="cDel">Cancel</button>
       <button class="btn danger" id="yDel">Delete</button>
@@ -723,13 +858,22 @@ function confirmDelete(type, id){
   `);
   document.getElementById('cDel').onclick = closeSheet;
   document.getElementById('yDel').onclick = async ()=>{
-    state[type] = state[type].filter(x=>x.id!==id);
-    await persist(type);
-    closeSheet(); toast("Deleted"); render();
+    const btn = document.getElementById('yDel');
+    btn.textContent = "Deleting…"; btn.disabled = true;
+    try{
+      state[type] = state[type].filter(x=>x.id!==id);
+      await saveDataType(type);
+      closeSheet(); toast("🗑 Deleted"); render();
+    }catch(err){
+      toast("❌ Failed: " + err.message);
+      btn.textContent = "Delete"; btn.disabled = false;
+    }
   };
 }
 
-/* ---------- Subject form ---------- */
+/* ================================================================
+   SUBJECTS
+   ================================================================ */
 function openSubjectForm(id){
   const editing = !!id;
   const item = editing ? state.subjects.find(x=>x.id===id) : null;
@@ -747,7 +891,7 @@ function openSubjectForm(id){
     </div>
     <div class="sheet-actions">
       <button class="btn ghost" id="fCancel">Cancel</button>
-      <button class="btn primary" id="fSave">Save</button>
+      <button class="btn primary" id="fSave">Save & publish</button>
     </div>
   `);
   document.getElementById('fCancel').onclick = closeSheet;
@@ -755,12 +899,20 @@ function openSubjectForm(id){
     const name = document.getElementById('fName').value.trim();
     const emoji = document.getElementById('fEmoji').value.trim() || '📘';
     if(!name){ toast("Add a subject name"); return; }
-    if(editing){ item.name = name; item.emoji = emoji; }
-    else state.subjects.push({id:uid(), emoji, name, lectures:[]});
-    await persist('subjects');
-    closeSheet(); toast(editing ? "Saved" : "Added"); render();
+    const btn = document.getElementById('fSave');
+    btn.textContent = "Publishing…"; btn.disabled = true;
+    try{
+      if(editing){ item.name = name; item.emoji = emoji; }
+      else state.subjects.push({id:uid(), emoji, name, lectures:[]});
+      await saveDataType('subjects');
+      closeSheet(); toast(editing ? "✅ Saved" : "✅ Added"); render();
+    }catch(err){
+      toast("❌ Failed: " + err.message);
+      btn.textContent = "Save & publish"; btn.disabled = false;
+    }
   };
 }
+
 function confirmDeleteSubject(id){
   openSheet(`
     <h3>Delete this subject?</h3>
@@ -772,20 +924,29 @@ function confirmDeleteSubject(id){
   `);
   document.getElementById('cDel').onclick = closeSheet;
   document.getElementById('yDel').onclick = async ()=>{
-    state.subjects = state.subjects.filter(x=>x.id!==id);
-    await persist('subjects');
-    closeSheet(); toast("Deleted"); render();
+    const btn = document.getElementById('yDel');
+    btn.textContent = "Deleting…"; btn.disabled = true;
+    try{
+      state.subjects = state.subjects.filter(x=>x.id!==id);
+      await saveDataType('subjects');
+      closeSheet(); toast("🗑 Deleted"); render();
+    }catch(err){
+      toast("❌ Failed: " + err.message);
+      btn.textContent = "Delete"; btn.disabled = false;
+    }
   };
 }
 
-/* ---------- Lecture form ---------- */
-const MAX_PDF_BYTES = 3.5 * 1024 * 1024; // ~3.5MB raw file (storage cap is 5MB per key, base64 adds ~33%)
+/* ================================================================
+   LECTURES + PDF UPLOAD
+   ================================================================ */
+const MAX_PDF_BYTES = 4 * 1024 * 1024; // GitHub API comfortably handles up to ~25MB, but keeping it reasonable for phones
 
 function openLectureForm(subjId, lecId){
   const subj = state.subjects.find(x=>x.id===subjId);
   if(!subj) return;
   const editing = !!lecId;
-  const item = editing ? subj.lectures.find(x=>x.id===lecId) : null;
+  const item = editing ? (subj.lectures||[]).find(x=>x.id===lecId) : null;
   const startMode = item && item.pdfUrl ? 'link' : 'upload';
 
   openSheet(`
@@ -802,8 +963,8 @@ function openLectureForm(subjId, lecId){
       </div>
       <div id="uploadPane" class="${startMode==='upload'?'':'hidden'}">
         <input type="file" id="fPdfFile" accept="application/pdf">
-        <div class="file-hint">Up to about 3.5MB. Larger files: use a link instead (Google Drive, etc.)</div>
-        <div class="file-picked" id="filePicked">${item && item.pdfKey ? '📄 Current file: ' + esc(item.title) + '.pdf (choose a new one to replace it)' : ''}</div>
+        <div class="file-hint">Up to ~4MB. Larger files: use a link (Google Drive, etc.)</div>
+        <div class="file-picked" id="filePicked">${item && item.pdfPath ? '📄 Current file: ' + esc(item.pdfPath) : ''}</div>
       </div>
       <div id="linkPane" class="${startMode==='link'?'':'hidden'}">
         <input id="fPdf" value="${item && item.pdfUrl ? esc(item.pdfUrl) : ''}" placeholder="https://...">
@@ -811,7 +972,7 @@ function openLectureForm(subjId, lecId){
     </div>
     <div class="sheet-actions">
       <button class="btn ghost" id="fCancel">Cancel</button>
-      <button class="btn primary" id="fSave">Save</button>
+      <button class="btn primary" id="fSave">Save & publish</button>
     </div>
   `);
 
@@ -837,71 +998,75 @@ function openLectureForm(subjId, lecId){
     const file = uploadMode ? document.getElementById('fPdfFile').files[0] : null;
     const pdfUrl = uploadMode ? '' : document.getElementById('fPdf').value.trim();
 
-    let pdfKey = item ? item.pdfKey : undefined;
+    const btn = document.getElementById('fSave');
 
-    if(file){
-      if(file.type !== 'application/pdf'){ toast("Please choose a PDF file"); return; }
-      if(file.size > MAX_PDF_BYTES){ toast("That file's too big — try a link instead"); return; }
-      toast("Uploading…");
-      try{
+    // Set up the new/updated lecture object
+    const lecId = editing ? item.id : uid();
+    const newLec = editing ? { ...item } : { id: lecId, title };
+    newLec.title = title;
+
+    if(!uploadMode){
+      newLec.pdfUrl = pdfUrl;
+      delete newLec.pdfPath;
+    }
+
+    btn.textContent = "Uploading…"; btn.disabled = true;
+
+    try{
+      // 1. Handle PDF upload if a file was chosen
+      if(file){
+        if(file.type !== 'application/pdf'){ throw new Error("Please choose a PDF file"); }
+        if(file.size > MAX_PDF_BYTES){ throw new Error("That file's too big — try a link"); }
         const base64 = await fileToBase64(file);
-        pdfKey = "pdf:" + (item ? item.id : uid());
-        await storeSet(pdfKey, base64);
-      }catch(err){
-        toast("Upload failed, try again");
-        return;
+        const safeName = (title.replace(/[^a-z0-9]+/gi,'_').toLowerCase()).slice(0,40) || 'file';
+        const pdfPath = `${PDF_PATH}/${subjId}/${lecId}_${safeName}.pdf`;
+        // Check if file already exists (to get sha for overwrite)
+        let existingSha = null;
+        try{
+          const r = await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${pdfPath}?ref=${GH_BRANCH}`, { headers: ghHeaders() });
+          if(r.ok){ const j = await r.json(); existingSha = j.sha; }
+        }catch(e){}
+        await ghPutBinary(pdfPath, base64, existingSha, `upload PDF for lecture ${lecId}`);
+        newLec.pdfPath = pdfPath;
+        delete newLec.pdfUrl;
       }
-    }
 
-    if(editing){
-      item.title = title;
-      item.pdfUrl = pdfUrl;
-      if(file) item.pdfKey = pdfKey;
-      if(uploadMode && !file && !item.pdfKey){ /* no file chosen, none existing — leave as no-pdf */ }
-      if(!uploadMode){ delete item.pdfKey; } // switched to link mode
-    } else {
-      const newLec = {id:uid(), title, pdfUrl};
-      if(pdfKey) newLec.pdfKey = pdfKey;
-      subj.lectures.push(newLec);
+      // 2. Save lecture list
+      if(editing){
+        subj.lectures = (subj.lectures||[]).map(x => x.id === lecId ? newLec : x);
+      } else {
+        subj.lectures = subj.lectures || [];
+        subj.lectures.push(newLec);
+      }
+      await saveDataType('subjects');
+
+      closeSheet(); toast(editing ? "✅ Saved" : "✅ Added"); render();
+    }catch(err){
+      console.error(err);
+      toast("❌ " + err.message);
+      btn.textContent = "Save & publish"; btn.disabled = false;
     }
-    await persist('subjects');
-    closeSheet(); toast(editing ? "Saved" : "Added"); render();
   };
 }
 
 function fileToBase64(file){
   return new Promise((resolve, reject)=>{
     const reader = new FileReader();
-    reader.onload = ()=> resolve(reader.result); // data:application/pdf;base64,....
+    reader.onload = ()=>{
+      // strip "data:application/pdf;base64," prefix
+      const s = String(reader.result);
+      const comma = s.indexOf(',');
+      resolve(s.slice(comma+1));
+    };
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
 }
 
-async function viewStoredPdf(pdfKey){
-  const win = window.open('', '_blank');
-  if(win){ win.document.write('<title>Loading PDF…</title><body style="font-family:sans-serif;padding:24px;">Loading PDF…</body>'); }
-  const dataUrl = await storeGet(pdfKey, null);
-  if(!dataUrl){
-    if(win) win.close();
-    toast("Couldn't load that PDF");
-    return;
-  }
-  try{
-    const res = await fetch(dataUrl);
-    const blob = await res.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    if(win) win.location.href = blobUrl;
-    else window.open(blobUrl, '_blank');
-  }catch(err){
-    if(win) win.close();
-    toast("Couldn't open that PDF");
-  }
-}
-
 function confirmDeleteLecture(subjId, lecId){
   openSheet(`
     <h3>Delete this lecture?</h3>
+    <p style="color:var(--ink-soft); font-size:.85rem;">The PDF (if any) stays in your repo — you can delete it later from GitHub.</p>
     <div class="sheet-actions">
       <button class="btn ghost" id="cDel">Cancel</button>
       <button class="btn danger" id="yDel">Delete</button>
@@ -909,16 +1074,23 @@ function confirmDeleteLecture(subjId, lecId){
   `);
   document.getElementById('cDel').onclick = closeSheet;
   document.getElementById('yDel').onclick = async ()=>{
-    const subj = state.subjects.find(x=>x.id===subjId);
-    const lec = subj.lectures.find(x=>x.id===lecId);
-    subj.lectures = subj.lectures.filter(x=>x.id!==lecId);
-    await persist('subjects');
-    if(lec && lec.pdfKey){ try{ await window.storage.delete(lec.pdfKey, true); }catch(e){} }
-    closeSheet(); toast("Deleted"); render();
+    const btn = document.getElementById('yDel');
+    btn.textContent = "Deleting…"; btn.disabled = true;
+    try{
+      const subj = state.subjects.find(x=>x.id===subjId);
+      subj.lectures = subj.lectures.filter(x=>x.id!==lecId);
+      await saveDataType('subjects');
+      closeSheet(); toast("🗑 Deleted"); render();
+    }catch(err){
+      toast("❌ Failed: " + err.message);
+      btn.textContent = "Delete"; btn.disabled = false;
+    }
   };
 }
 
-/* ---------- Schedule period form ---------- */
+/* ================================================================
+   SCHEDULE
+   ================================================================ */
 function openPeriodForm(id){
   const editing = !!id;
   const item = editing ? state.schedule.find(x=>x.id===id) : null;
@@ -946,7 +1118,7 @@ function openPeriodForm(id){
     </div>
     <div class="sheet-actions">
       <button class="btn ghost" id="fCancel">Cancel</button>
-      <button class="btn primary" id="fSave">Save</button>
+      <button class="btn primary" id="fSave">Save & publish</button>
     </div>
   `);
   document.getElementById('fCancel').onclick = closeSheet;
@@ -956,12 +1128,20 @@ function openPeriodForm(id){
     const end = document.getElementById('fEnd').value;
     const name = document.getElementById('fName').value.trim();
     if(!name || !start || !end){ toast("Fill in all fields"); return; }
-    if(editing){ item.day=day; item.start=start; item.end=end; item.name=name; }
-    else state.schedule.push({id:uid(), day, start, end, name});
-    await persist('schedule');
-    closeSheet(); toast(editing ? "Saved" : "Added"); render();
+    const btn = document.getElementById('fSave');
+    btn.textContent = "Publishing…"; btn.disabled = true;
+    try{
+      if(editing){ item.day=day; item.start=start; item.end=end; item.name=name; }
+      else state.schedule.push({id:uid(), day, start, end, name});
+      await saveDataType('schedule');
+      closeSheet(); toast(editing ? "✅ Saved" : "✅ Added"); render();
+    }catch(err){
+      toast("❌ Failed: " + err.message);
+      btn.textContent = "Save & publish"; btn.disabled = false;
+    }
   };
 }
+
 function confirmDeletePeriod(id){
   openSheet(`
     <h3>Delete this period?</h3>
@@ -972,15 +1152,31 @@ function confirmDeletePeriod(id){
   `);
   document.getElementById('cDel').onclick = closeSheet;
   document.getElementById('yDel').onclick = async ()=>{
-    state.schedule = state.schedule.filter(x=>x.id!==id);
-    await persist('schedule');
-    closeSheet(); toast("Deleted"); render();
+    const btn = document.getElementById('yDel');
+    btn.textContent = "Deleting…"; btn.disabled = true;
+    try{
+      state.schedule = state.schedule.filter(x=>x.id!==id);
+      await saveDataType('schedule');
+      closeSheet(); toast("🗑 Deleted"); render();
+    }catch(err){
+      toast("❌ Failed: " + err.message);
+      btn.textContent = "Delete"; btn.disabled = false;
+    }
   };
 }
 
-/* ==================== INIT ==================== */
+/* ================================================================
+   INIT
+   ================================================================ */
 (async function init(){
-  await loadState();
+  // Mark admin automatically if a token is saved (but we won't trust it until a write succeeds)
+  if(ghToken){
+    try{
+      const r = await fetch("https://api.github.com/user", { headers: ghHeaders() });
+      if(r.ok) isAdmin = true;
+    }catch(e){}
+  }
+  await loadAllData();
   render();
 })();
 </script>
