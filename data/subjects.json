@@ -3,6 +3,12 @@
     "id": "p51ef0i4ymy2",
     "emoji": "🐔",
     "name": "Poultry Nutrition and Feed Technology",
-    "lectures": []
+    "lectures": [
+      {
+        "id": "xy12hg9i5zzo",
+        "title": "Poultry Nutrition lecture 1",
+        "pdfPath": "pdfs/p51ef0i4ymy2/xy12hg9i5zzo_poultry_nutrition_lecture_1.pdf"
+      }
+    ]
   }
 ]
