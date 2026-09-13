@@ -20,6 +20,12 @@
     "id": "flkx59pk0vu8",
     "emoji": "🐜",
     "name": "Entomology",
-    "lectures": []
+    "lectures": [
+      {
+        "id": "irlxw5ax31cn",
+        "title": "Entomology Lecture 1",
+        "pdfPath": "pdfs/flkx59pk0vu8/irlxw5ax31cn_entomology_lecture_1.pdf"
+      }
+    ]
   }
 ]
