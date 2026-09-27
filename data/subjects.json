@@ -38,6 +38,12 @@
     "id": "h27828mczr7a",
     "emoji": "💊",
     "name": "General and Systemic Veterinary Medicine",
-    "lectures": []
+    "lectures": [
+      {
+        "id": "9ihki5rtlvo0",
+        "title": "Lecture:1 General and Systemic Vet. Medicine",
+        "pdfPath": "pdfs/h27828mczr7a/9ihki5rtlvo0_lecture_1_general_and_systemic_vet_medic.pdf"
+      }
+    ]
   }
 ]
